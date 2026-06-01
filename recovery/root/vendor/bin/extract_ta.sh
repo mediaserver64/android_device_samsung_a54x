@@ -25,8 +25,8 @@ if mount -o ro "/dev/block/mapper/vendor" "/tmp/vendor"; then
 
   model=$(getprop "ro.boot.em.model")
   
-  if [ -d "/tmp/vendor/firmware/tee/$model" ]; then
-    tee_dir="/tmp/vendor/firmware/tee/$model"
+  if [ -d "/tmp/vendor/firmware/$model/tee" ]; then
+    tee_dir="/tmp/vendor/firmware/$model/tee"
   else
     tee_dir="/tmp/vendor/tee"
   fi
