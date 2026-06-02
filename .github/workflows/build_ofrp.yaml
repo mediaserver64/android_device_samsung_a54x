@@ -85,18 +85,16 @@ jobs:
       - name: Repack Image
         run: |
           mkdir ~/files
-          cp out/target/product/a54x/recovery.img ~/twrp-build/ofrp.img
-          cd ~/twrp-build
+          cp out/target/product/a54x/recovery.img ~/files/recovery.img
+          cd ~/files
           tar cf recovery.tar recovery.img
-          cp out/target/product/a54x/recovery.img ~/files
-          cp OFRP* ~/files
         working-directory: ./fox-12.1
 
       - name: Publish to GitHub
         id: release
         uses: softprops/action-gh-release@v2
         with:
-          files: /home/runner/files/OFRP*
+          files: /home/runner/files
           name: OrangeFox 12.1
           tag_name: "${{ env.DATE }}"
           body: |
