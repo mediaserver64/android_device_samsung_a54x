@@ -80,19 +80,20 @@ jobs:
           source build/envsetup.sh
           set -e
           lunch twrp_a54x-eng && make clean && mka recoveryimage
+          cd out/target/product/a54x/
+          tar cf recovery.tar recovery.img
         working-directory: ./fox-12.1
 
       - name: Publish to GitHub
         id: release
         uses: softprops/action-gh-release@v2
         with:
-          files: /home/runner/work/android_device_samsung_a54x/android_device_samsung_a54x/fox-12.1/out/target/product/a54x/recovery.img
+          files: ./fox-12.1/out/target/product/a54x/recovery.*
           name: OrangeFox 12.1
           tag_name: "${{ env.DATE }}"
           body: |
-            VBMeta Patched:
-            https://github.com/Vaz15k/proprietary_vendor_samsung_a54x/releases
+            Find Patched VBMeta here:
+            https://github.com/majaahh/proprietary_vendor_samsung_exynos/releases
             
-            :rocket: *Built with love by GitHub Actions.*
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
