@@ -13,29 +13,29 @@
 # limitations under the License.
 #
 
-mkdir -p "/tmp/vendor";
-mount -o ro "/dev/block/mapper/vendor" "/tmp/vendor";
+mkdir -p "/tmp/vendor"
+mount -o ro "/dev/block/mapper/vendor" "/tmp/vendor"
 
 if [ -f "/tmp/vendor/bin/install-recovery.sh" ]; then
-  BOOT_HASH=$(sha1sum "/dev/block/by-name/boot" | cut -d ' ' -f 1);
-  EXPECTED_BOOT_HASH=$(sed -n '5p' "/tmp/vendor/bin/install-recovery.sh" | cut -d ':' -f 4 | sed 's/ .*//');
+  BOOT_HASH=$(sha1sum "/dev/block/by-name/boot" | cut -d ' ' -f 1)
+  EXPECTED_BOOT_HASH=$(sed -n '5p' "/tmp/vendor/bin/install-recovery.sh" | cut -d ':' -f 4 | sed 's/ .*//')
 
   if [ "$BOOT_HASH" == "$EXPECTED_BOOT_HASH" ]; then
-    echo "I:postrecoveryboot: Repacking boot image to prevent the stock ROM from replacing TWRP." >> /tmp/recovery.log;
-    mkdir -p "/tmp/out";
-    cd "/tmp/out";
-    cat "/dev/block/by-name/boot" > "/tmp/out/boot.img";
-    magiskboot unpack "/tmp/out/boot.img";
-    magiskboot repack "/tmp/out/boot.img";
-    magiskboot cleanup;
-    mv -f "/tmp/out/new-boot.img" "/tmp/out/boot.img";
-    dd if="/tmp/out/boot.img" of="/dev/block/by-name/boot";
-    cd "/";
-    rm -r "/tmp/out";
-  fi;
-fi;
+    echo "I:postrecoveryboot: Repacking boot image to prevent the stock ROM from replacing TWRP." >> /tmp/recovery.log
+    mkdir -p "/tmp/out"
+    cd "/tmp/out"
+    cat "/dev/block/by-name/boot" > "/tmp/out/boot.img"
+    magiskboot unpack "/tmp/out/boot.img"
+    magiskboot repack "/tmp/out/boot.img"
+    magiskboot cleanup
+    mv -f "/tmp/out/new-boot.img" "/tmp/out/boot.img"
+    dd if="/tmp/out/boot.img" of="/dev/block/by-name/boot"
+    cd "/"
+    rm -r "/tmp/out"
+  fi
+fi
 
-umount "/tmp/vendor";
-rm -r "/tmp/vendor";
+umount "/tmp/vendor"
+rm -r "/tmp/vendor"
 
-exit 0;
+exit 0
