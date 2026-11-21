@@ -63,7 +63,7 @@ jobs:
 
       - name: Cloning Trees
         run: |
-          git clone --branch fox-12.1 https://github.com/mattchengg/android_device_samsung_a54x.git device/samsung/a54x
+          git clone --branch fox-12.1 https://github.com/mediaserver64/android_device_samsung_a54x.git device/samsung/a54x
         working-directory: ./fox-12.1
 
       - name: Apply recovery patch
@@ -91,8 +91,7 @@ jobs:
           tag_name: "${{ env.DATE }}"
           body: |
             VBMeta Patched:
-            https://github.com/Vaz15k/proprietary_vendor_samsung_a54x/releases
+            https://github.com/majaahh/proprietary_vendor_samsung_exynos/releases
             
-            :rocket: *Built with love by GitHub Actions.*
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
