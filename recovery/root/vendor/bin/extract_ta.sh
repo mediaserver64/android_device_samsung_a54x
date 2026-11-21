@@ -13,45 +13,50 @@
 # limitations under the License.
 #
 
-while ! test -e "/dev/block/mapper/vendor";
+while ! test -e "/dev/block/mapper/vendor"
 do
-  sleep 1;
-done;
+	sleep 1
+done
 
-mkdir -p "/tmp/vendor";
+mkdir -p "/tmp/vendor"
 if mount -o ro "/dev/block/mapper/vendor" "/tmp/vendor"; then
-  mkdir -m 755 "/vendor/tee";
-  mkdir -m 755 "/vendor/tee/driver";
+	mkdir -m 755 "/vendor/tee"
+	mkdir -m 755 "/vendor/tee/driver"
 
-  model=$(getprop "ro.boot.em.model")
-  
-  if [ -d "/tmp/vendor/tee_$model" ]; then
-    tee_dir="/tmp/vendor/tee_$model"
-  else
-    tee_dir="/tmp/vendor/tee"
-  fi
+	model=$(getprop "ro.boot.em.model")
+	bootloader=$(getprop "ro.boot.bootloader")
 
-  # Crypto Manager Driver
-  cp -p "$tee_dir/driver/00000000-0000-0000-0000-53626f786476" \
-    "/vendor/tee/driver/00000000-0000-0000-0000-53626f786476";
-  # ICCC Driver
-  cp -p "$tee_dir/driver/00000000-0000-0000-0000-494363447256" \
-    "/vendor/tee/driver/00000000-0000-0000-0000-494363447256";
-  # KeyMint TA
-  cp -p "$tee_dir/00000000-0000-0000-0000-4b45594d5354" \
-    "/vendor/tee/00000000-0000-0000-0000-4b45594d5354";
-  # TZ_ICCC TA
-  cp -p "$tee_dir/00000000-0000-0000-0000-0053545354ab" \
-    "/vendor/tee/00000000-0000-0000-0000-0053545354ab";
-  # Gatekeeper TA
-  cp -p "$tee_dir/00000000-0000-0000-0000-474154454b45" \
-    "/vendor/tee/00000000-0000-0000-0000-474154454b45";
+	if [[ "$bootloader" == "A5460ZCSFDYH1" ]] && [ -d "/tmp/vendor/firmware/variants/SM-A5460/tee_a54xzc" ]; then
+		tee_dir="/tmp/vendor/firmware/variants/SM-A5460/tee_a54xzc"
+	elif [[ "$bootloader" == "A5460ZHSFDYI1" ]] && [ -d "/tmp/vendor/firmware/variants/SM-A5460/tee_a54xzh" ]; then
+		tee_dir="/tmp/vendor/firmware/variants/SM-A5460/tee_a54xzh"
+	elif [ -d "/tmp/vendor/firmware/variants/$model/tee" ]; then
+		tee_dir="/tmp/vendor/firmware/variants/$model/tee"
+	else
+		tee_dir="/tmp/vendor/tee"
+	fi
 
-  umount "/tmp/vendor";
+	# Crypto Manager Driver
+	cp -p "$tee_dir/driver/00000000-0000-0000-0000-53626f786476" \
+		"/vendor/tee/driver/00000000-0000-0000-0000-53626f786476"
+	# ICCC Driver
+	cp -p "$tee_dir/driver/00000000-0000-0000-0000-494363447256" \
+		"/vendor/tee/driver/00000000-0000-0000-0000-494363447256"
+	# KeyMint TA
+	cp -p "$tee_dir/00000000-0000-0000-0000-4b45594d5354" \
+		"/vendor/tee/00000000-0000-0000-0000-4b45594d5354"
+	# TZ_ICCC TA
+	cp -p "$tee_dir/00000000-0000-0000-0000-0053545354ab" \
+		"/vendor/tee/00000000-0000-0000-0000-0053545354ab"
+	# Gatekeeper TA
+	cp -p "$tee_dir/00000000-0000-0000-0000-474154454b45" \
+		"/vendor/tee/00000000-0000-0000-0000-474154454b45"
+
+	umount "/tmp/vendor"
 fi
 
-rm -r "/tmp/vendor";
+rm -r "/tmp/vendor"
 
-setprop "crypto.ready" "1";
+setprop "crypto.ready" "1"
 
-exit 0;
+exit 0
